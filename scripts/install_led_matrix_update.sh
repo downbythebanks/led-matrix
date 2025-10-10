@@ -109,34 +109,16 @@ echo -e "Please enter your matrix setup parameters. Press Enter to use the recom
 echo
 
 read -p "Rows per panel (--led-rows) [64]: " LED_ROWS
-LED_ROWS=${LED_ROWS:-64}
+LED_ROWS=${LED_ROWS:-32}
 
 read -p "Columns per panel (--led-cols) [64]: " LED_COLS
 LED_COLS=${LED_COLS:-64}
 
 read -p "Number of chained panels (--led-chain) [2]: " LED_CHAIN
-LED_CHAIN=${LED_CHAIN:-2}
+LED_CHAIN=${LED_CHAIN:-0
 
 read -p "Number of parallel chains (--led-parallel) [2]: " LED_PARALLEL
-LED_PARALLEL=${LED_PARALLEL:-2}
-
-echo
-echo -e "${YELLOW}If you are using a Raspberry Pi 3 Model B, it is recommended to set --led-slowdown-gpio to 3.${RESET}"
-read -p "Set --led-slowdown-gpio? (Recommended for RPi 3 Model B) [3, leave blank to skip]: " LED_SLOWDOWN_GPIO
-
-MATRIX_OPTS="--led-rows ${LED_ROWS} --led-cols ${LED_COLS} --led-chain ${LED_CHAIN} --led-parallel ${LED_PARALLEL}"
-if [[ -n "$LED_SLOWDOWN_GPIO" ]];
-then
-  MATRIX_OPTS="$MATRIX_OPTS --led-slowdown-gpio ${LED_SLOWDOWN_GPIO}"
-fi
-
-echo
-echo -e "${YELLOW}You can add any additional custom parameters for the matrix controller below.${RESET}"
-read -p "Enter any extra parameters (leave blank to skip): " CUSTOM_MATRIX_OPTS
-if [[ -n "$CUSTOM_MATRIX_OPTS" ]]; 
-then
-  MATRIX_OPTS="$MATRIX_OPTS $CUSTOM_MATRIX_OPTS"
-fi
+LED_PARALLEL=${LED_PARALLEL:-0}
 
 print_success "Matrix configuration: $MATRIX_OPTS"
 
