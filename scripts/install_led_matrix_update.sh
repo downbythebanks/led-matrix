@@ -124,27 +124,6 @@ print_success "Matrix configuration: $MATRIX_OPTS"
 
 echo -e "${CYAN}${BOLD}"
 echo "----------------------------------------------"
-echo "         🎵  Optional: Spotify Plugin"
-echo "----------------------------------------------"
-echo -e "${RESET}"
-echo -e "${BOLD}The Spotify Plugin shows the cover image of the song you are currently listening to!${RESET}"
-echo -e "To use it, you need a Spotify Developer account and must provide your Client ID and Client Secret."
-echo
-read -p "Do you want to use the Spotify Plugin? (y/N): " USE_SPOTIFY
-
-SPOTIFY_ENV=""
-if [[ "$USE_SPOTIFY" =~ ^[Yy]$ ]]; 
-then
-  read -p "🔑 Enter your Spotify Client ID: " SPOTIFY_CLIENT_ID
-  read -p "🔒 Enter your Spotify Client Secret: " SPOTIFY_CLIENT_SECRET
-  SPOTIFY_ENV="Environment=SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID\nEnvironment=SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET"
-  print_success "Spotify Plugin will be enabled! 🎶"
-else
-  print_info "Spotify Plugin will not be enabled."
-fi
-
-echo -e "${CYAN}${BOLD}"
-echo "----------------------------------------------"
 echo "       🔄  Automatic Updates Configuration"
 echo "----------------------------------------------"
 echo -e "${RESET}"
