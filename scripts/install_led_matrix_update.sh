@@ -125,7 +125,7 @@ echo -e "${YELLOW}If you are using a Raspberry Pi 3 Model B, it is recommended t
 read -p "Set --led-slowdown-gpio? (Recommended for RPi 3 Model B) [3, leave blank to skip]: " LED_SLOWDOWN_GPIO
 
 MATRIX_OPTS="--led-rows ${LED_ROWS} --led-cols ${LED_COLS} --led-chain ${LED_CHAIN} --led-parallel ${LED_PARALLEL}"
-if [[ -n "$LED_SLOWDOWN_GPIO" ]]; 
+if [[ -n "$LED_SLOWDOWN_GPIO" ]];
 then
   MATRIX_OPTS="$MATRIX_OPTS --led-slowdown-gpio ${LED_SLOWDOWN_GPIO}"
 fi
