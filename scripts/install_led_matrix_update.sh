@@ -11,7 +11,8 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # Ensure user 'pi' exists before setting SUDO_UID and SUDO_GID
-if ! id -u pi >/dev/null 2>&1; then
+if ! id -u pi >/dev/null 2>&1; 
+then
   echo -e "${RED}${BOLD}❌ Error:${RESET} User 'pi' does not exist. Please create the user 'pi' before running this script."
   exit 1
 fi
@@ -57,11 +58,13 @@ print_info() {
 print_header
 
 # Check for existing installation and offer full reinstall
-if [[ -d "/opt/led-matrix" ]]; then
+if [[ -d "/opt/led-matrix" ]]; 
+then
   print_info "Detected existing installation at /opt/led-matrix."
   echo -e "${RED}${BOLD}WARNING:${RESET} This will DELETE ALL DATA including config.json."
   read -p "Type DELETE to confirm full removal and reinstall: " REINSTALL_CONFIRM
-  if [[ "$REINSTALL_CONFIRM" == "DELETE" ]]; then
+  if [[ "$REINSTALL_CONFIRM" == "DELETE" ]]; 
+  then
     print_info "Stopping and disabling led-matrix.service..."
     sudo systemctl stop led-matrix.service 2>/dev/null || true
     sudo systemctl disable led-matrix.service 2>/dev/null || true
@@ -77,7 +80,8 @@ fi
 
 # Check architecture
 ARCH=$(uname -m)
-if [[ "$ARCH" != "aarch64" && "$ARCH" != "arm64" ]]; then
+if [[ "$ARCH" != "aarch64" && "$ARCH" != "arm64" ]]; 
+then
   print_error "This installer only supports arm64 systems."
   exit 1
 fi
@@ -88,7 +92,8 @@ API_URL="https://api.github.com/repos/$REPO/releases/latest"
 print_info "Fetching latest release info from GitHub... 🚀"
 ASSET_URL=$(curl -s "$API_URL" | grep "browser_download_url" | grep -E 'led-matrix-[0-9]+\.[0-9]+\.[0-9]+-arm64\.tar\.gz' | cut -d '"' -f 4 | head -n 1)
 
-if [[ -z "$ASSET_URL" ]]; then
+if [[ -z "$ASSET_URL" ]]; 
+then
   print_error "Could not find led-matrix-x.y.z-arm64.tar.gz in the latest release."
   exit 1
 fi
@@ -120,14 +125,16 @@ echo -e "${YELLOW}If you are using a Raspberry Pi 3 Model B, it is recommended t
 read -p "Set --led-slowdown-gpio? (Recommended for RPi 3 Model B) [3, leave blank to skip]: " LED_SLOWDOWN_GPIO
 
 MATRIX_OPTS="--led-rows ${LED_ROWS} --led-cols ${LED_COLS} --led-chain ${LED_CHAIN} --led-parallel ${LED_PARALLEL}"
-if [[ -n "$LED_SLOWDOWN_GPIO" ]]; then
+if [[ -n "$LED_SLOWDOWN_GPIO" ]]; 
+then
   MATRIX_OPTS="$MATRIX_OPTS --led-slowdown-gpio ${LED_SLOWDOWN_GPIO}"
 fi
 
 echo
 echo -e "${YELLOW}You can add any additional custom parameters for the matrix controller below.${RESET}"
 read -p "Enter any extra parameters (leave blank to skip): " CUSTOM_MATRIX_OPTS
-if [[ -n "$CUSTOM_MATRIX_OPTS" ]]; then
+if [[ -n "$CUSTOM_MATRIX_OPTS" ]]; 
+then
   MATRIX_OPTS="$MATRIX_OPTS $CUSTOM_MATRIX_OPTS"
 fi
 
@@ -144,7 +151,8 @@ echo
 read -p "Do you want to use the Spotify Plugin? (y/N): " USE_SPOTIFY
 
 SPOTIFY_ENV=""
-if [[ "$USE_SPOTIFY" =~ ^[Yy]$ ]]; then
+if [[ "$USE_SPOTIFY" =~ ^[Yy]$ ]]; 
+then
   read -p "🔑 Enter your Spotify Client ID: " SPOTIFY_CLIENT_ID
   read -p "🔒 Enter your Spotify Client Secret: " SPOTIFY_CLIENT_SECRET
   SPOTIFY_ENV="Environment=SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID\nEnvironment=SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET"
@@ -165,7 +173,8 @@ read -p "Do you want to enable automatic updates? (Y/n): " ENABLE_AUTO_UPDATES
 ENABLE_AUTO_UPDATES=${ENABLE_AUTO_UPDATES:-Y}
 
 UPDATE_SETTINGS=""
-if [[ "$ENABLE_AUTO_UPDATES" =~ ^[Yy]$ ]]; then
+if [[ "$ENABLE_AUTO_UPDATES" =~ ^[Yy]$ ]]; 
+then
   print_success "Automatic updates will be enabled! 🔄"
   echo
   echo -e "${YELLOW}You can configure how often to check for updates:${RESET}"
@@ -231,17 +240,20 @@ print_info "⬇️  Downloading LED Matrix binary for arm64..."
 curl -# -L -o led-matrix-arm64.tar.gz "$ASSET_URL"
 
 # Check if already installed
-if [[ -f "/opt/led-matrix/main" ]]; then
+if [[ -f "/opt/led-matrix/main" ]]; 
+then
   print_info "Detected existing installation at /opt/led-matrix."
   print_info "All files except for the configuration file (config.json) will be deleted and replaced with the latest version."
   read -p "Do you want to continue with the update? (y/N): " CONFIRM_UPDATE
-  if [[ ! "$CONFIRM_UPDATE" =~ ^[Yy]$ ]]; then
+  if [[ ! "$CONFIRM_UPDATE" =~ ^[Yy]$ ]]; 
+  then
     print_info "Update cancelled by user. Exiting."
     exit 0
   fi
   print_info "Updating to latest version..."
   # Backup config.json if it exists
-  if [[ -f "/opt/led-matrix/config.json" ]]; then
+  if [[ -f "/opt/led-matrix/config.json" ]]; 
+  then
     sudo cp /opt/led-matrix/config.json "$TMP_DIR/config.json.bak"
   fi
   # Remove everything except config.json
@@ -250,7 +262,8 @@ if [[ -f "/opt/led-matrix/main" ]]; then
   print_info "Extracting update..."
   (sudo tar -xzf led-matrix-arm64.tar.gz -C /opt/led-matrix --strip-components=1) & spin
   # Restore config.json if it was backed up
-  if [[ -f "$TMP_DIR/config.json.bak" ]]; then
+  if [[ -f "$TMP_DIR/config.json.bak" ]]; 
+  then
     sudo mv "$TMP_DIR/config.json.bak" /opt/led-matrix/config.json
   fi
   print_success "Update complete!"
@@ -262,7 +275,8 @@ fi
 
 print_info "📝 Creating initial configuration..."
 # Create config.json with update settings if it doesn't exist
-if [[ ! -f "/opt/led-matrix/config.json" ]]; then
+if [[ ! -f "/opt/led-matrix/config.json" ]]; 
+then
   (echo "$UPDATE_SETTINGS" | sudo tee /opt/led-matrix/config.json > /dev/null) & spin
   print_success "Configuration file created with update settings"
 else
@@ -302,7 +316,8 @@ echo
 print_info "Access the web interface at:"
 echo -e "${BOLD}  http://$(hostname -I | awk '{print $1}'):8080${RESET}"
 echo
-if [[ "$ENABLE_AUTO_UPDATES" =~ ^[Yy]$ ]]; then
+if [[ "$ENABLE_AUTO_UPDATES" =~ ^[Yy]$ ]]; 
+then
   print_info "Automatic updates are enabled and will check every $FREQ_DESC"
   print_info "You can manage update settings from the web interface at /updates"
 else
